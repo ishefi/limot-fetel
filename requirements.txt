@@ -1,0 +1,4 @@
+pydantic==1.10.9
+milon==0.0.1
+fastapi==0.96.1
+uvicorn==0.22.0
