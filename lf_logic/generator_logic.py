@@ -32,7 +32,10 @@ class GeneratorLogic:
     }
 
     def __init__(self):
-        self.milon = milon.dictionaries.DictionaryHeEn()
+        self.milon = milon.dictionaries.DictionaryHeEn(limit=0)
+        self.milon_words = [
+            word['translated'] for word in self.milon.words
+        ]
 
     async def generate(self, num_of_roots=10):
         roots = [self._gen_random_root() for _ in range(num_of_roots)]
@@ -57,7 +60,7 @@ class GeneratorLogic:
         )
 
     async def _filter_nonword(self, word: str) -> Optional[str]:
-        if self.milon.lookup(word):
+        if word in self.milon_words:
             return None
         else:
             return self._fix_last_letter(word)
