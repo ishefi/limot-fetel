@@ -49,14 +49,17 @@ class GeneratorLogic:
         "כ": "ך",
     }
 
-    def __init__(self):
+    def __init__(self, templates, weights):
         self.milon = milon.dictionaries.DictionaryHeEn(limit=0)
         self.milon_words = [
             word['translated'] for word in self.milon.words
         ]
+        self.templates = templates or consts.VERB_TEMPLATES
+        self.weights = weights or consts.WEIGHTS
+        print(self.weights)
 
     async def generate(
-            self, num_of_roots: int, p: Optional[str], a: Optional[str], l: Optional[str]
+            self, num_of_roots: int, p: str | None, a: str | None, l: str | None
     ):
         roots = [self._gen_random_root(p, a, l) for _ in range(num_of_roots)]
         potential_nons = []
@@ -64,11 +67,11 @@ class GeneratorLogic:
         for root in roots:
             potential_nons += random.choices([
                 self._populate_template(Template.noun_template(weight), root)
-                for weight in consts.WEIGHTS
+                for weight in self.weights
             ], k=10)
             potential_nons += [
                 self._populate_template(Template.verb_template(template), root)
-                for template in consts.VERB_TEMPLATES
+                for template in self.templates
             ]
         nons = asyncio.gather(
             *[self._filter_nonword(word) for word in potential_nons]
@@ -91,7 +94,7 @@ class GeneratorLogic:
             l=l or random.choice(self.CHARS),
         )
 
-    async def _filter_nonword(self, word: str) -> Optional[str]:
+    async def _filter_nonword(self, word: str) -> str | None:
         if word in self.milon_words:
             return None
         else:

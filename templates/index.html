@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>לימות פתל</title>
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{{ url_for('static', path='limotFetel.js') }}"></script>
+</head>
+<body>
+<div>
+    <h1>
+        <center>Limot Fetel</center>
+    </h1>
+    <div id="control">
+        <select multiple disabled id="weights">
+            {% for weight in weights %}
+            <option>{{ weight }}</option>
+            {% endfor %}
+        </select>
+        <input type="checkbox" id="weightsAll" checked><label>all</label>
+
+                <br><br>
+        <select multiple disabled id="templates">
+            {% for template in templates %}
+            <option>{{ template }}</option>
+            {% endfor %}
+        </select>
+        <input type="checkbox" id="templatesAll" checked><label>all</label>
+        <br><br>
+        {% for root_letter in 'פעל' %}
+        <br>
+        <label for="{{ root_letter }}">{{ root_letter }}:</label>
+        <select name="{{ root_letter }}" id="{{ root_letter }}">
+            <option value="">all</option>
+            {% for letter in 'אבגדהוזחטיכלמנסעפצקרשת' %}
+            <option value="{{ letter }}">{{ letter }}</option>
+            {% endfor %}
+        </select>
+        {% endfor %}
+        <br><br>
+        <button id="getWords">Get non-words</button>
+    </div>
+    <div id="words" dir="rtl">
+        <ul id="wordList"></ul>
+    </div>
+</div>
+</body>
+</html>
