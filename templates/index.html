@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>לימות פתל</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alef:wght@400;700&display=swap" rel="stylesheet">
     <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{{ url_for('static', path='limotFetel.js') }}"></script>
@@ -10,26 +13,32 @@
 <body>
 <div>
     <h1>
-        <center>Limot Fetel</center>
+        Limot Fetel
     </h1>
-    <div id="control">
+    <p>Hebrew nonword generator</p>
+    <div id="control" align="center" class="controlContainer">
+        <div class="controlKnob">
         <select multiple disabled id="weights">
             {% for weight in weights %}
             <option>{{ weight }}</option>
             {% endfor %}
         </select>
+        <br>
         <input type="checkbox" id="weightsAll" checked><label>all</label>
-
-                <br><br>
+        </div>
+        <div class="controlKnob">
         <select multiple disabled id="templates">
             {% for template in templates %}
             <option>{{ template }}</option>
             {% endfor %}
         </select>
-        <input type="checkbox" id="templatesAll" checked><label>all</label>
-        <br><br>
-        {% for root_letter in 'פעל' %}
         <br>
+        <input type="checkbox" id="templatesAll" checked><label>all</label>
+        </div>
+
+        <br>
+        <div class="controlKnob" dir="rtl">
+        {% for root_letter in 'פעל' %}
         <label for="{{ root_letter }}">{{ root_letter }}:</label>
         <select name="{{ root_letter }}" id="{{ root_letter }}">
             <option value="">all</option>
@@ -38,12 +47,17 @@
             {% endfor %}
         </select>
         {% endfor %}
-        <br><br>
-        <button id="getWords">Get non-words</button>
+        </div>
+        <br>
+            <button id="getWords">Get non-words</button>
+
     </div>
     <div id="words" dir="rtl">
         <ul id="wordList"></ul>
     </div>
+    <footer>
+        <p><a href="https://www.ishefi.com" target="_blank">Itamar Shefi</a> 2023</p>
+    </footer>
 </div>
 </body>
 </html>

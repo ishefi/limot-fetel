@@ -1,0 +1,46 @@
+html {
+    background: aliceblue;
+    font-family: 'Alef', sans-serif;
+}
+
+select, button {
+    font-size: x-small;
+    font-family: 'Alef', sans-serif;
+}
+
+controlContainer {
+    align: center;
+}
+
+h1 {
+    text-shadow: 1px 1px 1px gray;
+    text-align: center;
+}
+
+p {
+    font-size: xx-small;
+    text-align: center;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+    transition: color 0.2s ease-in, background-color 0.2s ease-out;
+}
+
+a:hover {
+    color: gray;
+}
+
+.controlKnob {
+    margin: 0.5rem;
+    display: inline-block;
+    font-size: x-small;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}

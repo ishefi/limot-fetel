@@ -3,17 +3,14 @@
 from __future__ import annotations
 
 import asyncio
+from collections import defaultdict
 import random
 import re
-from typing import TYPE_CHECKING
 
 import milon.dictionaries
 from pydantic import BaseModel
 
 from lf_logic import consts
-
-if TYPE_CHECKING:
-    from typing import Optional
 
 
 class Root(BaseModel):
@@ -65,19 +62,22 @@ class GeneratorLogic:
         potential_nons = []
 
         for root in roots:
-            potential_nons += random.choices([
+            templated_root = [
                 self._populate_template(Template.noun_template(weight), root)
                 for weight in self.weights
-            ], k=10)
+            ]
+            potential_nons += random.choices(templated_root, k=min(len(templated_root), 10))
             potential_nons += [
                 self._populate_template(Template.verb_template(template), root)
                 for template in self.templates
             ]
-        nons = asyncio.gather(
-            *[self._filter_nonword(word) for word in potential_nons]
-        )
+        potential_nons = set(potential_nons)
 
-        return [non for non in await nons if non is not None]
+        nons = defaultdict(list)
+        for potential, template in potential_nons:
+            if self._is_nonword(potential):
+                nons[template].append(potential)
+        return [{"template": template, "nons": nons} for template, nons in nons.items()]
 
     def _populate_template(self, template: Template, root: Root):
         replacer_dict = {
@@ -85,7 +85,8 @@ class GeneratorLogic:
 
         }
         replacer = lambda match: replacer_dict[match.string[match.start(): match.end()]]
-        return re.sub(template.root_regex, replacer, template.template)
+        populated = re.sub(template.root_regex, replacer, template.template)
+        return self._fix_last_letter(populated), template.template
 
     def _gen_random_root(self, p, a, l) -> Root:
         return Root(
@@ -94,11 +95,11 @@ class GeneratorLogic:
             l=l or random.choice(self.CHARS),
         )
 
-    async def _filter_nonword(self, word: str) -> str | None:
+    def _is_nonword(self, word: str) -> bool:
         if word in self.milon_words:
-            return None
+            return False
         else:
-            return self._fix_last_letter(word)
+            return True
 
     def _fix_last_letter(self, word: str) -> str:
         last_letter = word[-1]
