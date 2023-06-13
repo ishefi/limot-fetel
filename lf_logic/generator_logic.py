@@ -52,7 +52,6 @@ class GeneratorLogic:
         ]
         self.templates = templates or consts.VERB_TEMPLATES
         self.weights = weights or consts.WEIGHTS
-        print(self.weights)
 
     async def generate(
             self, num_of_roots: int, p: str | None, a: str | None, l: str | None

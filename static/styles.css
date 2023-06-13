@@ -4,7 +4,7 @@ html {
 }
 
 select, button {
-    font-size: x-small;
+    font-size: xx-large;
     font-family: 'Alef', sans-serif;
 }
 
@@ -15,10 +15,12 @@ controlContainer {
 h1 {
     text-shadow: 1px 1px 1px gray;
     text-align: center;
+    font-size: 4rem;
+    margin-bottom: 0;
 }
 
 p {
-    font-size: xx-small;
+    font-size: large;
     text-align: center;
 }
 
@@ -33,9 +35,21 @@ a:hover {
 }
 
 .controlKnob {
-    margin: 0.5rem;
+    margin: 1rem;
     display: inline-block;
-    font-size: x-small;
+    font-size: xx-large;
+}
+
+select {
+  direction: rtl;
+}
+
+.template {
+  width: 8rem;
+}
+
+ul {
+  font-size: xx-large;
 }
 
 footer {

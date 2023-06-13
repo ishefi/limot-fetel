@@ -3,6 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>לימות פתל</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WK2P4XBHDG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-WK2P4XBHDG');
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alef:wght@400;700&display=swap" rel="stylesheet">
@@ -18,7 +28,7 @@
     <p>Hebrew nonword generator</p>
     <div id="control" align="center" class="controlContainer">
         <div class="controlKnob">
-        <select multiple disabled id="weights">
+        <select class="template" multiple disabled id="weights">
             {% for weight in weights %}
             <option>{{ weight }}</option>
             {% endfor %}
@@ -27,7 +37,7 @@
         <input type="checkbox" id="weightsAll" checked><label>all</label>
         </div>
         <div class="controlKnob">
-        <select multiple disabled id="templates">
+        <select class="template" multiple disabled id="templates">
             {% for template in templates %}
             <option>{{ template }}</option>
             {% endfor %}
