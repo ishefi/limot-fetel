@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
-import asyncio
 from collections import defaultdict
 import random
 import re
@@ -82,7 +81,6 @@ class GeneratorLogic:
     def _populate_template(self, template: Template, root: Root):
         replacer_dict = {
             template.root.p: root.p, template.root.a: root.a, template.root.l: root.l
-
         }
         replacer = lambda match: replacer_dict[match.string[match.start(): match.end()]]
         populated = re.sub(template.root_regex, replacer, template.template)
