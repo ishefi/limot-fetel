@@ -17,8 +17,10 @@ jtemplates = Jinja2Templates(directory="templates")
 
 
 class NonResponse(BaseModel):
-    template: str
-    nons: list[str]
+    templates: list[str]
+    weights: list[str]
+    roots: list[str]
+    data: list[dict[str, str]]
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -37,7 +39,7 @@ async def get_non_words(
         l: str | None = None,
         number_of_roots: int = 10
 
-) -> list[NonResponse]:
+) -> NonResponse:
     if templates:
         templates = templates.split(",")
     if weights:

@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
-from collections import defaultdict
 import random
 import re
 
@@ -20,10 +19,16 @@ class Root(BaseModel):
     a: str
     l: str
 
+    def __str__(self):
+        return f'{self.p}-{self.a}-{self.l}'
+
 
 class Template(BaseModel):
     root: Root
     template: str
+
+    def __str__(self):
+        return self.template
 
     @staticmethod
     def noun_template(template):
@@ -36,6 +41,18 @@ class Template(BaseModel):
     @property
     def root_regex(self):
         return f'({self.root.p})|({self.root.a})|({self.root.l})'
+
+
+class NonWord(BaseModel):
+    populated: str
+    template: str
+    root: str
+
+    def __eq__(self, other):
+        return self.populated == other.populated
+
+    def __hash__(self):
+        return hash((type(self), self.populated))
 
 
 class GeneratorLogic:
@@ -60,25 +77,26 @@ class GeneratorLogic:
             self, num_of_roots: int, p: str | None, a: str | None, l: str | None
     ):
         roots = [self._gen_random_root(p, a, l) for _ in range(num_of_roots)]
-        potential_nons = []
+        potential_nons: list[NonWord] = []
 
         for root in roots:
-            templated_root = [
+            potential_nons += [
                 self._populate_template(Template.noun_template(weight), root)
                 for weight in self.weights
             ]
-            potential_nons += random.choices(templated_root, k=min(len(templated_root), 10))
             potential_nons += [
                 self._populate_template(Template.verb_template(template), root)
                 for template in self.templates
             ]
-        potential_nons = set(potential_nons)
-
-        nons = defaultdict(list)
-        for potential, template in potential_nons:
-            if self._is_nonword(potential):
-                nons[template].append(potential)
-        return [{"template": template, "nons": nons} for template, nons in nons.items()]
+        return {
+            "data": [
+                potential.dict() for potential in set(potential_nons)
+                if self._is_nonword(potential.populated)
+            ],
+            "roots": [str(root) for root in roots],
+            "templates": self.templates,
+            "weights": self.weights,
+        }
 
     def _populate_template(self, template: Template, root: Root):
         replacer_dict = {
@@ -90,7 +108,7 @@ class GeneratorLogic:
         for Fixer in FIXERS:
             fixer = Fixer()
             populated = fixer.fix(populated)
-        return populated, template.template
+        return NonWord(populated=populated, template=str(template), root=str(root))
 
     def _gen_random_root(self, p, a, l) -> Root:
         return Root(

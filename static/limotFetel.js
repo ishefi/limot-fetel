@@ -30,26 +30,51 @@ let limotFetel = (function() {
 
         const url = "/api/non-words?" + params.toString();
         const response = await fetch(url);
-        let wordList = $("#wordList");
-        wordList.empty();
         try {
-        var tempNons = await response.json();
-            for (let tempNon of tempNons) {
-                var node = document.createElement("li");
-                var textNode = document.createTextNode(tempNon.template);
-                node.appendChild(textNode);
-                var nonList = document.createElement("ul");
+            var tempNons = await response.json();
+            const roots = tempNons.roots;
 
-                for (let non of tempNon.nons) {
-                    var nonNode = document.createElement("li");
-                    var nonTextNode = document.createTextNode(non);
-                    nonNode.appendChild(nonTextNode);
-                    nonList.appendChild(nonNode);
-                }
-                node.appendChild(nonList);
-                wordList.append(node);
-            }
+            $.each(["template", "weight"], function(i, twName) {
+                 let tableId = "#" + twName + "Nons";
+                 let thead = $(tableId + " thead");
+                 if (thead.length === 0) {
+                     thead = $("<thead>");
+                     $(tableId).append(thead);
+                 } else {
+                     thead.empty();
+                 }
+                 let headTr = $("<tr>");
+                 headTr.append($("<th>").html("Template"));
+                 $.each(roots, function(i, root) {
+                     headTr.append($("<th>").html(root));
+                 });
+                 thead.append(headTr);
+
+                 let tbody = $(tableId + " tbody");
+                 if (tbody.length === 0) {
+                     tbody = $("<tbody>");
+                     $("#" + twName).append(tbody);
+                 } else {
+                     tbody.empty();
+                 }
+                 $.each(tempNons[twName + "s"], function(i, tw) {
+                     let trid = tw;
+                     let tr = $('<tr>').attr("id", trid);
+                     tr.append($('<td>').append($("<b>").html(tw)));
+                     $.each(roots, function(i, root) {
+                         let tdid = trid + '-' + root.replace(/\s/g, '');
+                         $('<td>').attr("id", tdid).appendTo(tr);
+                     });
+                     tbody.append(tr);
+                 });
+            });
+            $.each(tempNons.data, function(i, tempNon) {
+                var trid = tempNon.template;
+                var tdid = tempNon.root.replace(/\s/g, '');
+                $("td#" + trid + '-' + tdid).html(tempNon.populated);
+            });
         } catch(e) {
+            console.log(e);
             return null;
         }
     }

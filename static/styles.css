@@ -48,13 +48,15 @@ select {
   width: 8rem;
 }
 
-ul {
-  font-size: xx-large;
+table {
+  font-size: x-large;
 }
 
 footer {
-  position: fixed;
   bottom: 0;
   width: 100%;
-  text-align: center;
+}
+
+.wordList {
+  margin: auto;
 }

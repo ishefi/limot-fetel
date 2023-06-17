@@ -1,4 +1,5 @@
 #!/usr/in/env python
+# -*- coding: utf-8 -*-
 from hebrew.chars import NiqqudChar
 
 from lf_logic.niqqud_fixers.base_fixer import BaseFixer
