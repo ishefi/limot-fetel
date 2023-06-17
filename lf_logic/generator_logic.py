@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/in/env python
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
@@ -10,6 +10,9 @@ import milon.dictionaries
 from pydantic import BaseModel
 
 from lf_logic import consts
+from lf_logic.fixer_collector import collect_fixers
+
+FIXERS = collect_fixers()
 
 
 class Root(BaseModel):
@@ -83,7 +86,11 @@ class GeneratorLogic:
         }
         replacer = lambda match: replacer_dict[match.string[match.start(): match.end()]]
         populated = re.sub(template.root_regex, replacer, template.template)
-        return self._fix_last_letter(populated), template.template
+        populated = self._fix_last_letter(populated)
+        for Fixer in FIXERS:
+            fixer = Fixer()
+            populated = fixer.fix(populated)
+        return populated, template.template
 
     def _gen_random_root(self, p, a, l) -> Root:
         return Root(
