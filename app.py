@@ -37,7 +37,7 @@ async def get_non_words(
         p: str | None = None,
         a: str | None = None,
         l: str | None = None,
-        number_of_roots: int = 10
+        number_of_roots: int = 5
 
 ) -> NonResponse:
     if templates:
