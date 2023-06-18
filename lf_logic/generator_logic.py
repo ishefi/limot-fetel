@@ -22,6 +22,9 @@ class Root(BaseModel):
     def __str__(self):
         return f'{self.p}-{self.a}-{self.l}'
 
+    def __hash__(self):
+        return hash((type(self), self.p, self.a, self.l))
+
 
 class Template(BaseModel):
     root: Root
@@ -76,7 +79,8 @@ class GeneratorLogic:
     async def generate(
             self, num_of_roots: int, p: str | None, a: str | None, l: str | None
     ):
-        roots = [self._gen_random_root(p, a, l) for _ in range(num_of_roots)]
+        roots = set([self._gen_random_root(p, a, l) for _ in range(num_of_roots)])
+
         potential_nons: list[NonWord] = []
 
         for root in roots:
