@@ -60,3 +60,20 @@ footer {
 .wordList {
   margin: auto;
 }
+
+.loader {
+  visibility: hidden;
+  margin: auto;
+  border: 9px solid #dcdcdc;
+  border-radius: 50%;
+  border-top: 9px solid #3498db;
+  width: 2rem;
+  height: 2rem;
+  -webkit-animation: spin 1.5s linear infinite; /* Safari */
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

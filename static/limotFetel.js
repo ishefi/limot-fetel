@@ -29,9 +29,12 @@ let limotFetel = (function() {
         }
 
         const url = "/api/non-words?" + params.toString();
+        let loader = $("#words .loader");
+        loader.css("visibility", "visible");
         const response = await fetch(url);
         try {
             var tempNons = await response.json();
+            loader.css("visibility", "hidden");
             const roots = tempNons.roots;
 
             $.each(["template", "weight"], function(i, twName) {
