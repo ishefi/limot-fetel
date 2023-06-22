@@ -1,4 +1,6 @@
 #!/usr/in/env python
+import inspect
+
 from pathlib import Path
 
 from lf_logic.niqqud_fixers.base_fixer import BaseFixer
@@ -18,10 +20,13 @@ def _fixers_from_file(fixers, py_module, mod):
         return
     module_path = f"{py_module}.{mod.stem}"
     try:
-        pkg = __import__(module_path, globals(), locals(), fromlist=["*"])
-        potential_fixers = [getattr(pkg, attr, None) for attr in dir(pkg)]
-        for potential in potential_fixers:
-            if issubclass(potential, BaseFixer) and potential != BaseFixer:
-                fixers.append(potential)
+        module = __import__(module_path, globals(), locals(), fromlist=["*"])
+        potential_fixers = [getattr(module, attr, None) for attr in dir(module)]
+        for name, klass in inspect.getmembers(module, inspect.isclass):
+            is_defined_in_module = inspect.getmodule(klass) == module
+            is_fixer = issubclass(klass, BaseFixer)
+            is_concrete = not inspect.isabstract(klass)
+            if is_defined_in_module and is_fixer and is_concrete:
+                fixers.append(klass)
     except Exception as ex:
         pass  # TODO: log
