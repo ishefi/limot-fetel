@@ -1,35 +1,38 @@
 #!/usr/in/env python
 # -*- coding: utf-8 -*-
-from hebrew.chars import NiqqudChar
 
 from lf_logic.niqqud_fixers.base_fixer import BaseFixer
 
 
 class GroniyotFixer(BaseFixer):
-    GRONIYOT = 'אהחער'
-    HATAF_PATAX = NiqqudChar.search("HATAF PATAH").char
+    GRONIYOT = "אהחער"
+    HATAF_PATAX = "ֲ"
 
-    def fix(self, word):
-        graphemes = self._get_graphemes(word)
+    @staticmethod
+    def fix(word):
+        graphemes = GroniyotFixer._get_graphemes(word)
         for i, grapheme in enumerate(graphemes):
-            if not self._is_gronit(grapheme):
+            if not GroniyotFixer._is_gronit(grapheme):
                 continue
-            if self._has_sheva(grapheme):
-                graphemes[i] = self._haxtef(grapheme)
-            if self._has_dagesh(grapheme):
-                graphemes[i] = self._remove_dagesh(grapheme)
-        return ''.join(graphemes)
+            if GroniyotFixer._has_sheva(grapheme):
+                graphemes[i] = GroniyotFixer._haxtef(grapheme)
+            if GroniyotFixer._has_dagesh(grapheme):
+                graphemes[i] = GroniyotFixer._remove_dagesh(grapheme)
+        return "".join(graphemes)
 
-    def _is_gronit(self, grapheme: str) -> bool:
-        for char in self.GRONIYOT:
+    @staticmethod
+    def _is_gronit(grapheme: str) -> bool:
+        for char in GroniyotFixer.GRONIYOT:
             if char in grapheme:
                 return True
         return False
 
-    def _remove_dagesh(self, grapheme: str) -> str:
-        return grapheme.replace(self.DAGESH, '')
+    @staticmethod
+    def _remove_dagesh(grapheme: str) -> str:
+        return grapheme.replace(GroniyotFixer.DAGESH, "")
 
-    def _haxtef(self, grapheme: str) -> str:
+    @staticmethod
+    def _haxtef(grapheme: str) -> str:
         # TOOD: implement based on jb-jd here:
         # https://hebrew-academy.org.il/topic/hahlatot/grammardecisions/netiyyat-hapoal/3-2-%D7%94%D7%A4%D7%95%D7%A2%D7%9C-%D7%91%D7%A9%D7%95%D7%A8%D7%A9%D7%99%D7%9D-%D7%91%D7%A2%D7%9C%D7%99-%D7%A2%D7%99%D7%A6%D7%95%D7%A8%D7%99%D7%9D-%D7%92%D7%A8%D7%95%D7%A0%D7%99%D7%99%D7%9D/#target-3120
-        return grapheme.replace(self.SHEVA, self.HATAF_PATAX)
+        return grapheme.replace(GroniyotFixer.SHEVA, GroniyotFixer.HATAF_PATAX)

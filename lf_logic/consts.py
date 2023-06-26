@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-WEIGHTS = '''
+WEIGHTS = """
 קְטִילָה
 הִקָּטְלוּת
 קִטּוּל
@@ -55,9 +55,9 @@ WEIGHTS = '''
 קָטִיל
 קִטֵּל
 קַטֶּלֶת
-'''.strip().split()
+""".strip().split()
 
-VERB_TEMPLATES = '''
+VERB_TEMPLATES = """
 פָעַל
 הִפְעִיל
 פִעֵּל
@@ -65,4 +65,4 @@ VERB_TEMPLATES = '''
 הֻפְעַל
 נִפְעַל
 פֻעַּל
-'''.strip().split()
+""".strip().split()

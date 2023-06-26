@@ -1,29 +1,33 @@
 #!/usr/in/env python
 import abc
+from typing import Protocol
 
 from hebrew import Hebrew
-from hebrew.chars import NiqqudChar
+
+
+class Fixer(Protocol):
+    @staticmethod
+    def fix(word: str) -> str:
+        ...
 
 
 class BaseFixer(abc.ABC):
-    DAGESH = NiqqudChar.search("DAGESH").char
-    SHEVA = NiqqudChar.search("SHEVA").char
+    DAGESH = "ּ"
+    SHEVA = "ְ"
 
-    @abc.abstractmethod
-    def fix(self, word: str) -> str:
-        ...
+    @staticmethod
+    def fix(word: str) -> str:
+        raise NotImplementedError
 
-    def _get_graphemes(self, word: str) -> list[str]:
+    @staticmethod
+    def _get_graphemes(word: str) -> list[str]:
         hebrew_word = Hebrew(word)
-        try:
-            return [str(g) for g in hebrew_word.graphemes]
-        except:
-            print(word)
+        return [str(g) for g in hebrew_word.graphemes]
 
-    def _has_dagesh(self, grapheme: str) -> bool:
-        return self.DAGESH in grapheme
+    @staticmethod
+    def _has_dagesh(grapheme: str) -> bool:
+        return BaseFixer.DAGESH in grapheme
 
-    def _has_sheva(self, grapheme: str) -> bool:
-        return self.SHEVA in grapheme
-
-
+    @staticmethod
+    def _has_sheva(grapheme: str) -> bool:
+        return BaseFixer.SHEVA in grapheme

@@ -26,26 +26,31 @@ class NonResponse(BaseModel):
 @app.get("/", response_class=HTMLResponse)
 def get_index(request: Request):
     return jtemplates.TemplateResponse(
-        "index.html", {"request": request, "weights": consts.WEIGHTS, "templates": consts.VERB_TEMPLATES}
+        "index.html",
+        {
+            "request": request,
+            "weights": consts.WEIGHTS,
+            "templates": consts.VERB_TEMPLATES,
+        },
     )
 
 
 @app.get("/api/non-words")
 async def get_non_words(
-        weights: str | None = None,
-        templates: str | None = None,
-        p: str | None = None,
-        a: str | None = None,
-        l: str | None = None,
-        number_of_roots: int = 5
-
+    weights: str | None = None,
+    templates: str | None = None,
+    p: str | None = None,
+    a: str | None = None,
+    l: str | None = None,
+    number_of_roots: int = 5,
 ) -> NonResponse:
-    if templates:
-        templates = templates.split(",")
-    if weights:
-        weights = weights.split(",")
-    logic = GeneratorLogic(templates=templates, weights=weights)
-    return await logic.generate(
-        p=p, a=a, l=l, num_of_roots=number_of_roots
-    )
-
+    if templates is not None:
+        template_list = templates.split(",")
+    else:
+        template_list = []
+    if weights is not None:
+        weight_list = weights.split(",")
+    else:
+        template_list = []
+    logic = GeneratorLogic(templates=template_list, weights=weight_list)
+    return await logic.generate(pe=p, ain=a, lamed=l, num_of_roots=number_of_roots)

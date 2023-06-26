@@ -9,9 +9,7 @@ import milon.dictionaries
 from pydantic import BaseModel
 
 from lf_logic import consts
-from lf_logic.fixer_collector import collect_fixers
-
-FIXERS = collect_fixers()
+from lf_logic.fixer_collector import get_fixers
 
 
 class Root(BaseModel):
@@ -20,7 +18,7 @@ class Root(BaseModel):
     l: str
 
     def __str__(self):
-        return f'{self.p}-{self.a}-{self.l}'
+        return f"{self.p}-{self.a}-{self.l}"
 
     def __hash__(self):
         return hash((type(self), self.p, self.a, self.l))
@@ -35,15 +33,15 @@ class Template(BaseModel):
 
     @staticmethod
     def noun_template(template):
-        return Template(root=Root(p='ק', a='ט', l='ל'), template=template)
+        return Template(root=Root(p="ק", a="ט", l="ל"), template=template)
 
     @staticmethod
     def verb_template(template):
-        return Template(root=Root(p='פ', a='ע', l='ל'), template=template)
+        return Template(root=Root(p="פ", a="ע", l="ל"), template=template)
 
     @property
     def root_regex(self):
-        return f'({self.root.p})|({self.root.a})|({self.root.l})'
+        return f"({self.root.p})|({self.root.a})|({self.root.l})"
 
 
 class NonWord(BaseModel):
@@ -59,7 +57,7 @@ class NonWord(BaseModel):
 
 
 class GeneratorLogic:
-    CHARS = 'אבגדהוזחטיכלמנסעפצקרשת'
+    CHARS = "אבגדהוזחטיכלמנסעפצקרשת"
     LAST_LETTERS = {
         "מ": "ם",
         "נ": "ן",
@@ -70,16 +68,17 @@ class GeneratorLogic:
 
     def __init__(self, templates, weights):
         self.milon = milon.dictionaries.DictionaryHeEn(limit=0)
-        self.milon_words = [
-            word['translated'] for word in self.milon.words
-        ]
+        self.milon_words = [word["translated"] for word in self.milon.words]
         self.templates = templates or consts.VERB_TEMPLATES
         self.weights = weights or consts.WEIGHTS
+        self.fixers = get_fixers()
 
     async def generate(
-            self, num_of_roots: int, p: str | None, a: str | None, l: str | None
+        self, num_of_roots: int, pe: str | None, ain: str | None, lamed: str | None
     ):
-        roots = set([self._gen_random_root(p, a, l) for _ in range(num_of_roots)])
+        roots = set(
+            [self._gen_random_root(pe, ain, lamed) for _ in range(num_of_roots)]
+        )
 
         potential_nons: list[NonWord] = []
 
@@ -94,7 +93,8 @@ class GeneratorLogic:
             ]
         return {
             "data": [
-                potential.dict() for potential in set(potential_nons)
+                potential.dict()
+                for potential in potential_nons
                 if self._is_nonword(potential.populated)
             ],
             "roots": [str(root) for root in roots],
@@ -104,21 +104,25 @@ class GeneratorLogic:
 
     def _populate_template(self, template: Template, root: Root):
         replacer_dict = {
-            template.root.p: root.p, template.root.a: root.a, template.root.l: root.l
+            template.root.p: root.p,
+            template.root.a: root.a,
+            template.root.l: root.l,
         }
-        replacer = lambda match: replacer_dict[match.string[match.start(): match.end()]]
+
+        def replacer(match):
+            return replacer_dict[match.string[match.start() : match.end()]]
+
         populated = re.sub(template.root_regex, replacer, template.template)
         populated = self._fix_last_letter(populated)
-        for Fixer in FIXERS:
-            fixer = Fixer()
+        for fixer in self.fixers:
             populated = fixer.fix(populated)
         return NonWord(populated=populated, template=str(template), root=str(root))
 
-    def _gen_random_root(self, p, a, l) -> Root:
+    def _gen_random_root(self, pe, ain, lamed) -> Root:
         return Root(
-            p=p or random.choice(self.CHARS),
-            a=a or random.choice(self.CHARS),
-            l=l or random.choice(self.CHARS),
+            p=pe or random.choice(self.CHARS),
+            a=ain or random.choice(self.CHARS),
+            l=lamed or random.choice(self.CHARS),
         )
 
     def _is_nonword(self, word: str) -> bool:
