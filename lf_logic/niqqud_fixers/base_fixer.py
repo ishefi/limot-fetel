@@ -16,6 +16,7 @@ class BaseFixer(abc.ABC):
     SHEVA = "ְ"
 
     @staticmethod
+    @abc.abstractmethod
     def fix(word: str) -> str:
         raise NotImplementedError
 

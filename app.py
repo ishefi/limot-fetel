@@ -51,6 +51,6 @@ async def get_non_words(
     if weights is not None:
         weight_list = weights.split(",")
     else:
-        template_list = []
+        weight_list = []
     logic = GeneratorLogic(templates=template_list, weights=weight_list)
     return await logic.generate(pe=p, ain=a, lamed=l, num_of_roots=number_of_roots)
