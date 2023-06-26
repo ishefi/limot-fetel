@@ -1,0 +1,6 @@
+[run]
+branch = True
+omit =
+    lf_mocks/*
+    venv/*
+    tests/*
