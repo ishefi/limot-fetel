@@ -49,12 +49,6 @@ class NonWord(BaseModel):
     template: str
     root: str
 
-    def __eq__(self, other):
-        return self.populated == other.populated
-
-    def __hash__(self):
-        return hash((type(self), self.populated))
-
 
 class GeneratorLogic:
     CHARS = "אבגדהוזחטיכלמנסעפצקרשת"

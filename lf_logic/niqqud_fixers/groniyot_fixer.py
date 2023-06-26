@@ -15,7 +15,7 @@ class GroniyotFixer(BaseFixer):
             if not GroniyotFixer._is_gronit(grapheme):
                 continue
             if GroniyotFixer._has_sheva(grapheme):
-                graphemes[i] = GroniyotFixer._haxtef(grapheme)
+                graphemes[i] = grapheme = GroniyotFixer._haxtef(grapheme)
             if GroniyotFixer._has_dagesh(grapheme):
                 graphemes[i] = GroniyotFixer._remove_dagesh(grapheme)
         return "".join(graphemes)
