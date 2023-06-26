@@ -2,26 +2,24 @@ html {
     background: aliceblue;
     font-family: 'Alef', sans-serif;
 }
+body {
+    justify-content: center;
+    text-align: center;
+}
 
 select, button {
     font-size: xx-large;
     font-family: 'Alef', sans-serif;
 }
 
-controlContainer {
-    align: center;
-}
-
 h1 {
     text-shadow: 1px 1px 1px gray;
-    text-align: center;
     font-size: 4rem;
     margin-bottom: 0;
 }
 
 p {
     font-size: large;
-    text-align: center;
 }
 
 a {
