@@ -1,6 +1,6 @@
 pydantic==1.10.9
 milon==0.0.1
-fastapi==0.96.1
+fastapi==0.98.0
 uvicorn==0.22.0
 Jinja2==3.1.2
 hebrew==0.6.0
