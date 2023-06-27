@@ -8,7 +8,7 @@ from hebrew import Hebrew
 class Fixer(Protocol):
     @staticmethod
     def fix(word: str) -> str:
-        ...
+        ...  # pragma: no cover
 
 
 class BaseFixer(abc.ABC):
@@ -18,7 +18,7 @@ class BaseFixer(abc.ABC):
     @staticmethod
     @abc.abstractmethod
     def fix(word: str) -> str:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @staticmethod
     def _get_graphemes(word: str) -> list[str]:

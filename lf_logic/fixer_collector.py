@@ -17,7 +17,7 @@ def get_fixers() -> list[Fixer]:
 
 
 def collect_fixers() -> list[Fixer]:
-    fixer_dir = Path("lf_logic") / Path("niqqud_fixers")
+    fixer_dir = Path(__file__).parent.parent / Path("lf_logic") / Path("niqqud_fixers")
     py_module = str(fixer_dir).replace("/", ".")
     fixers: list[Fixer] = []
     for mod in Path.iterdir(fixer_dir):

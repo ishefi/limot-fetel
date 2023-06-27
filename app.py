@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -10,10 +12,12 @@ from lf_logic import consts
 from lf_logic.generator_logic import GeneratorLogic
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app_path = Path(__file__).parent.absolute()
+app.mount(
+    "/static", StaticFiles(directory=str(app_path / Path("static"))), name="static"
+)
 
-
-jtemplates = Jinja2Templates(directory="templates")
+jtemplates = Jinja2Templates(directory=str(app_path / Path("templates")))
 
 
 class NonResponse(BaseModel):
