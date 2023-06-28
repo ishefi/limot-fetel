@@ -71,20 +71,20 @@ class TestApp(LfTestCase):
         # act
         response = self.client.get(
             "/api/non-words",
-            params="weights=קוטל&templates=פעול&p=נ&a=ש&l=כ&number_of_roots=1",
+            params="weights=קוטל&templates=פעול&p=כ&a=ז&l=נ&number_of_roots=1",
         )
 
         # assert
         self.assertEqual(response.status_code, 200)
         response_json = response.json()
-        self.assert_contains_key_value(response_json, "roots", ["נ-ש-כ"])
+        self.assert_contains_key_value(response_json, "roots", ["כ-ז-נ"])
         self.assert_contains_key_value(response_json, "templates", ["פעול"])
         self.assert_contains_key_value(response_json, "weights", ["קוטל"])
         words = self.assert_contains(response_json, "data")
         self.assertCountEqual(
             [
-                {"populated": "נושך", "template": "קוטל", "root": "נ-ש-כ"},
-                {"populated": "נשוך", "template": "פעול", "root": "נ-ש-כ"},
+                {"populated": "כּוזן", "template": "קוטל", "root": "כ-ז-נ"},
+                {"populated": "כּזון", "template": "פעול", "root": "כ-ז-נ"},
             ],
             words,
         )

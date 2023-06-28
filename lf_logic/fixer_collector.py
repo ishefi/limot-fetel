@@ -17,10 +17,11 @@ def get_fixers() -> list[Fixer]:
 
 
 def collect_fixers() -> list[Fixer]:
-    fixer_dir = Path(__file__).parent.parent / Path("lf_logic") / Path("niqqud_fixers")
-    py_module = str(fixer_dir).replace("/", ".")
+    relative_fixer_dir = Path("lf_logic") / "niqqud_fixers"
+    absolute_fixer_dir = Path(__file__).parent.parent / relative_fixer_dir
+    py_module = str(relative_fixer_dir).replace("/", ".")
     fixers: list[Fixer] = []
-    for mod in Path.iterdir(fixer_dir):
+    for mod in Path.iterdir(absolute_fixer_dir):
         _fixers_from_file(fixers, py_module, mod)
     return fixers
 
@@ -33,10 +34,12 @@ def _fixers_from_file(fixers, py_module, mod) -> None:
         module = __import__(module_path, globals(), locals(), fromlist=["*"])
         potential_fixers = [getattr(module, attr, None) for attr in dir(module)]
         for name, klass in inspect.getmembers(module, inspect.isclass):
-            is_defined_in_module = inspect.getmodule(klass) == module
-            is_fixer = issubclass(klass, BaseFixer)
-            is_concrete = not inspect.isabstract(klass)
-            if is_defined_in_module and is_fixer and is_concrete:
-                fixers.append(klass())
+            if not inspect.getmodule(klass) == module:  # is defined in module
+                continue
+            if not issubclass(klass, BaseFixer):  # is fixer
+                continue
+            if inspect.isabstract(klass):  # is concrete
+                continue
+            fixers.append(klass())
     except Exception:
         pass  # TODO: log
