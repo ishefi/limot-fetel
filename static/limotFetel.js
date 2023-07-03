@@ -17,9 +17,10 @@ let limotFetel = (function() {
     async function getWords() {
 
         const params = new URLSearchParams({
-            p: $("#פ").find(":selected").attr("value"),
-            a: $("#ע").find(":selected").attr("value"),
-            l: $("#ל").find(":selected").attr("value"),
+            p: $("#פ").find(":selected").val(),
+            a: $("#ע").find(":selected").val(),
+            l: $("#ל").find(":selected").val(),
+            number_of_roots: $("#numRoots").val(),
         });
         for (let tw of ["templates", "weights"]) {
             let tws = getTempWeight(tw);

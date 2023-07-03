@@ -7,7 +7,7 @@ body {
     text-align: center;
 }
 
-select, button {
+select, button, input {
     font-size: xx-large;
     font-family: 'Alef', sans-serif;
 }
