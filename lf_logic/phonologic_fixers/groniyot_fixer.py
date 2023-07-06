@@ -1,7 +1,7 @@
 #!/usr/in/env python
 # -*- coding: utf-8 -*-
 
-from lf_logic.niqqud_fixers.base_fixer import BaseFixer
+from lf_logic.phonologic_fixers.base_fixer import BaseFixer
 
 
 class GroniyotFixer(BaseFixer):

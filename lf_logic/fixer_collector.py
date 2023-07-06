@@ -3,8 +3,8 @@ import inspect
 
 from pathlib import Path
 
-from lf_logic.niqqud_fixers.base_fixer import BaseFixer
-from lf_logic.niqqud_fixers.base_fixer import Fixer
+from lf_logic.phonologic_fixers.base_fixer import BaseFixer
+from lf_logic.phonologic_fixers.base_fixer import Fixer
 
 _FIXERS: list[Fixer] | None = None
 
@@ -17,7 +17,7 @@ def get_fixers() -> list[Fixer]:
 
 
 def collect_fixers() -> list[Fixer]:
-    relative_fixer_dir = Path("lf_logic") / "niqqud_fixers"
+    relative_fixer_dir = Path("lf_logic") / "phonologic_fixers"
     absolute_fixer_dir = Path(__file__).parent.parent / relative_fixer_dir
     py_module = str(relative_fixer_dir).replace("/", ".")
     fixers: list[Fixer] = []

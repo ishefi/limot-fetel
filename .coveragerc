@@ -4,4 +4,4 @@ omit =
     lf_mocks/*
     venv/*
     tests/*
-    lf_logic/niqqud_fixers/temp-*
+    lf_logic/phonologic_fixers/temp-*

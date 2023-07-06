@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-from lf_logic.niqqud_fixers.dagesh_kal_fixer import DageshKalFixer
+from lf_logic.phonologic_fixers.dagesh_kal_fixer import DageshKalFixer
 from lf_mocks.lf_test_case import LfTestCase
 
 

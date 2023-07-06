@@ -12,9 +12,11 @@ class TestFixerCollector(LfTestCase):
         self.m_iterdir = self.patch_object(fixer_collector.Path, "iterdir")
         self.m_iterdir.return_value = []
         self.fixers_path = (
-            fixer_collector.Path(fixer_collector.__file__).parent / "niqqud_fixers"
+            fixer_collector.Path(fixer_collector.__file__).parent / "phonologic_fixers"
         )
-        self._fixer_import = "from lf_logic.niqqud_fixers.base_fixer import BaseFixer"
+        self._fixer_import = (
+            "from lf_logic.phonologic_fixers.base_fixer import BaseFixer"
+        )
         self._mock_fixer_content = (
             self._fixer_import + "\n"
             "class MockFixer(BaseFixer):\n"
@@ -59,7 +61,7 @@ class TestFixerCollector(LfTestCase):
         (fixer,) = fixers
         self.assertEqual(
             str(fixer.__class__),
-            f"<class 'lf_logic.niqqud_fixers.{temp_mod.stem}.MockFixer'>",
+            f"<class 'lf_logic.phonologic_fixers.{temp_mod.stem}.MockFixer'>",
         )
 
     def test_collect_fixers__collect_only_py_files(self):

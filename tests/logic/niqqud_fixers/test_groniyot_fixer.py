@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from lf_logic.niqqud_fixers.groniyot_fixer import GroniyotFixer
+from lf_logic.phonologic_fixers.groniyot_fixer import GroniyotFixer
 from lf_mocks.lf_test_case import LfTestCase
 
 
