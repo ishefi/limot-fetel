@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 from unittest.mock import MagicMock
 
+from lf_base import schemas
 from lf_logic.generator_logic import GeneratorLogic
-from lf_logic.generator_logic import Root
 from lf_mocks.lf_test_case import LfTestCase
 
 
@@ -14,7 +14,7 @@ class TestGeneratorLogic(LfTestCase):
         self.x_gen_random_root, self.m_gen_random_root = self.xpatch_object(
             GeneratorLogic, "_gen_random_root"
         )
-        self.m_gen_random_root.return_value = Root(p="א", a="ב", l="ג")
+        self.m_gen_random_root.return_value = schemas.Root(p="א", a="ב", l="ג")
         self.m_get_fixers = self.patch_module("get_fixers")
         self.m_get_fixers.return_value = []
         self.templates = ["פועל"]
@@ -106,7 +106,7 @@ class TestGeneratorLogic(LfTestCase):
 
     async def test_last_letter_fixing(self):
         # arrange
-        self.m_gen_random_root.return_value = Root(p="מ", a="מ", l="מ")
+        self.m_gen_random_root.return_value = schemas.Root(p="מ", a="מ", l="מ")
 
         # act
         result = await self.testee.generate(

@@ -6,48 +6,10 @@ import random
 import re
 
 import milon.dictionaries
-from pydantic import BaseModel
 
 from lf_logic import consts
 from lf_logic.fixer_collector import get_fixers
-
-
-class Root(BaseModel):
-    p: str
-    a: str
-    l: str
-
-    def __str__(self):
-        return f"{self.p}-{self.a}-{self.l}"
-
-    def __hash__(self):
-        return hash((type(self), self.p, self.a, self.l))
-
-
-class Template(BaseModel):
-    root: Root
-    template: str
-
-    def __str__(self):
-        return self.template
-
-    @staticmethod
-    def noun_template(template):
-        return Template(root=Root(p="ק", a="ט", l="ל"), template=template)
-
-    @staticmethod
-    def verb_template(template):
-        return Template(root=Root(p="פ", a="ע", l="ל"), template=template)
-
-    @property
-    def root_regex(self):
-        return f"({self.root.p})|({self.root.a})|({self.root.l})"
-
-
-class NonWord(BaseModel):
-    populated: str
-    template: str
-    root: str
+from lf_base import schemas
 
 
 class GeneratorLogic:
@@ -74,15 +36,15 @@ class GeneratorLogic:
             [self._gen_random_root(pe, ain, lamed) for _ in range(num_of_roots)]
         )
 
-        potential_nons: list[NonWord] = []
+        potential_nons: list[schemas.NonWord] = []
 
         for root in roots:
             potential_nons += [
-                self._populate_template(Template.noun_template(weight), root)
+                self._populate_template(schemas.Template.noun_template(weight), root)
                 for weight in self.weights
             ]
             potential_nons += [
-                self._populate_template(Template.verb_template(template), root)
+                self._populate_template(schemas.Template.verb_template(template), root)
                 for template in self.templates
             ]
         return {
@@ -96,7 +58,7 @@ class GeneratorLogic:
             "weights": self.weights,
         }
 
-    def _populate_template(self, template: Template, root: Root):
+    def _populate_template(self, template: schemas.Template, root: schemas.Root):
         replacer_dict = {
             template.root.p: root.p,
             template.root.a: root.a,
@@ -110,10 +72,12 @@ class GeneratorLogic:
         populated = self._fix_last_letter(populated)
         for fixer in self.fixers:
             populated = fixer.fix(populated)
-        return NonWord(populated=populated, template=str(template), root=str(root))
+        return schemas.NonWord(
+            populated=populated, template=str(template), root=str(root)
+        )
 
-    def _gen_random_root(self, pe, ain, lamed) -> Root:
-        return Root(
+    def _gen_random_root(self, pe, ain, lamed) -> schemas.Root:
+        return schemas.Root(
             p=pe or random.choice(self.CHARS),
             a=ain or random.choice(self.CHARS),
             l=lamed or random.choice(self.CHARS),
