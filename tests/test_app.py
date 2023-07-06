@@ -67,24 +67,26 @@ class TestApp(LfTestCase):
     async def test_get_non_words_e2e(self):
         # arrange
         self.x_GeneratorLogic.stop()
+        hitpael = "הִתְפַעֵּל"
 
         # act
         response = self.client.get(
             "/api/non-words",
-            params="weights=קוטל&templates=פעול&p=כ&a=ז&l=נ&number_of_roots=1",
+            params=f"weights=קוטל&templates={hitpael}&p=ז&a=צ&l=נ&number_of_roots=1",
         )
 
         # assert
         self.assertEqual(response.status_code, 200)
         response_json = response.json()
-        self.assert_contains_key_value(response_json, "roots", ["כ-ז-נ"])
-        self.assert_contains_key_value(response_json, "templates", ["פעול"])
+        self.assert_contains_key_value(response_json, "roots", ["ז-צ-נ"])
+        self.assert_contains_key_value(response_json, "templates", [hitpael])
         self.assert_contains_key_value(response_json, "weights", ["קוטל"])
         words = self.assert_contains(response_json, "data")
         self.assertCountEqual(
             [
-                {"populated": "כּוזן", "template": "קוטל", "root": "כ-ז-נ"},
-                {"populated": "כּזון", "template": "פעול", "root": "כ-ז-נ"},
+                {"populated": "זוצן", "template": "קוטל", "root": "ז-צ-נ"},
+                # hitpael & beged-kefet fixers
+                {"populated": "הִזְדַּצֵּן", "template": hitpael, "root": "ז-צ-נ"},
             ],
             words,
         )
