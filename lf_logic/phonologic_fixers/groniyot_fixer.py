@@ -10,7 +10,7 @@ class GroniyotFixer(BaseFixer):
 
     @staticmethod
     def fix(word):
-        graphemes = GroniyotFixer._get_graphemes(word)
+        graphemes = GroniyotFixer._get_graphemes(word.populated)
         for i, grapheme in enumerate(graphemes):
             if not GroniyotFixer._is_gronit(grapheme):
                 continue
@@ -18,7 +18,7 @@ class GroniyotFixer(BaseFixer):
                 graphemes[i] = grapheme = GroniyotFixer._haxtef(grapheme)
             if GroniyotFixer._has_dagesh(grapheme):
                 graphemes[i] = GroniyotFixer._remove_dagesh(grapheme)
-        return "".join(graphemes)
+        word.populated = "".join(graphemes)
 
     @staticmethod
     def _is_gronit(grapheme: str) -> bool:

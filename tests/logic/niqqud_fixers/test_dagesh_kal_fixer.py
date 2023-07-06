@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 
+from lf_base import schemas
 from lf_logic.phonologic_fixers.dagesh_kal_fixer import DageshKalFixer
 from lf_mocks.lf_test_case import LfTestCase
 
@@ -12,53 +13,58 @@ class TestDageshKalFixer(LfTestCase):
 
     async def test_fix__no_fix(self):
         # arrange
-        word = "קטל"
+        word = schemas.NonWord(populated="קטל", root="", template="")
+        original = word.populated
 
         # act
-        result = self.testee.fix(word)
+        self.testee.fix(word)
 
         # assert
-        self.assertEqual(word, result)
+        self.assertEqual(original, word.populated)
 
     async def test_fix_word_beginning(self):
         # arrange
-        word = "פעל"
+        word = schemas.NonWord(populated="פעל", root="", template="")
+        original = word.populated
 
         # act
-        result = self.testee.fix(word)
+        self.testee.fix(word)
 
         # assert
-        self.assertNotEqual(word, result)
-        self.assertEqual("פּעל", result)
+        self.assertNotEqual(original, word.populated)
+        self.assertEqual("פּעל", word.populated)
 
     async def test_dont_fix_after_tnua(self):
         # arrange
-        word = "לַפל"
+        word = schemas.NonWord(populated="לַפל", root="", template="")
+        original = word.populated
 
         # act
-        result = self.testee.fix(word)
+        self.testee.fix(word)
 
         # assert
-        self.assertEqual(result, word)
+        self.assertEqual(original, word.populated)
 
     @pytest.mark.skip("TODO: fix shwa na")
     async def test_fix_after_shwa_na(self):
         # arrange
-        word = "לְפַעֵל"
+        word = schemas.NonWord(populated="לְפַעֵל", root="", template="")
+        original = word.populated
 
         # act
-        result = self.testee.fix(word)
+        self.testee.fix(word)
 
         # assert
-        self.assertEqual(result, word)
+        self.assertEqual(original, word.populated)
 
     async def test_fix_after_shwa_nax(self):
         # arrange
-        word = "מִתְבהל"
+        word = schemas.NonWord(populated="מִתְבהל", root="", template="")
+        original = word.populated
 
         # act
-        result = self.testee.fix(word)
+        self.testee.fix(word)
 
         # assert
-        self.assertNotEqual(word, result)
-        self.assertEqual("מִתְבּהל", result)
+        self.assertNotEqual(original, word.populated)
+        self.assertEqual("מִתְבּהל", word.populated)

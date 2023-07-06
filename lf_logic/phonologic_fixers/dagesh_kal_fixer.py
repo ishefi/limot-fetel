@@ -8,7 +8,7 @@ class DageshKalFixer(BaseFixer):
 
     @staticmethod
     def fix(word):
-        graphemes = DageshKalFixer._get_graphemes(word)
+        graphemes = DageshKalFixer._get_graphemes(word.populated)
         after_tnua = False
         for i, grapheme in enumerate(graphemes):
             is_beged_kefet = DageshKalFixer._is_beged_kefet(grapheme)
@@ -16,7 +16,7 @@ class DageshKalFixer(BaseFixer):
             if is_beged_kefet and not has_dagesh and not after_tnua:
                 graphemes[i] = grapheme + DageshKalFixer.DAGESH
             after_tnua = DageshKalFixer._has_tnua(grapheme)
-        return "".join(graphemes)
+        word.populated = "".join(graphemes)
 
     @staticmethod
     def _is_beged_kefet(grapheme) -> bool:

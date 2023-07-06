@@ -1,13 +1,16 @@
 #!/usr/in/env python
+from __future__ import annotations
 import abc
 from typing import Protocol
 
 from hebrew import Hebrew
 
+from lf_base import schemas
+
 
 class Fixer(Protocol):
     @staticmethod
-    def fix(word: str) -> str:
+    def fix(word: schemas.NonWord) -> None:
         ...  # pragma: no cover
 
 
@@ -17,7 +20,7 @@ class BaseFixer(abc.ABC):
 
     @staticmethod
     @abc.abstractmethod
-    def fix(word: str) -> str:
+    def fix(word: schemas.NonWord) -> None:
         raise NotImplementedError  # pragma: no cover
 
     @staticmethod

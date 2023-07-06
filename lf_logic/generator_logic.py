@@ -70,11 +70,12 @@ class GeneratorLogic:
 
         populated = re.sub(template.root_regex, replacer, template.template)
         populated = self._fix_last_letter(populated)
-        for fixer in self.fixers:
-            populated = fixer.fix(populated)
-        return schemas.NonWord(
+        non_word = schemas.NonWord(
             populated=populated, template=str(template), root=str(root)
         )
+        for fixer in self.fixers:
+            fixer.fix(non_word)
+        return non_word
 
     def _gen_random_root(self, pe, ain, lamed) -> schemas.Root:
         return schemas.Root(

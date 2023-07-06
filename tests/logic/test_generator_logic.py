@@ -136,8 +136,11 @@ class TestGeneratorLogic(LfTestCase):
     async def test_fixtures(self):
         # arrange
         m_fixer = MagicMock()
-        m_fixer.fix.side_effect = ["נוקק", "פוקק"]
         self.m_get_fixers.return_value = [m_fixer]
+        expected_nons = [
+            schemas.NonWord(populated="אבוג", root="א-ב-ג", template="קטול"),
+            schemas.NonWord(populated="אובג", root="א-ב-ג", template="פועל"),
+        ]
 
         # act
         result = await self.testee.generate(
@@ -145,9 +148,8 @@ class TestGeneratorLogic(LfTestCase):
         )
 
         # assert
-        m_fixer.fix.assert_any_call("אבוג")
-        m_fixer.fix.assert_any_call("אובג")
+        for expected_non in expected_nons:
+            m_fixer.fix.assert_any_call(expected_non)
 
         data = self.assert_contains(result, "data")
-        words = [d["populated"] for d in data]
-        self.assertCountEqual(["נוקק", "פוקק"], words)
+        self.assertCountEqual([non.dict() for non in expected_nons], data)
