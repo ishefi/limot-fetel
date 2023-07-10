@@ -9,6 +9,8 @@ from lf_base import schemas
 
 
 class Fixer(Protocol):
+    ORDER: int
+
     @staticmethod
     def fix(word: schemas.NonWord) -> None:
         ...  # pragma: no cover

@@ -4,6 +4,7 @@ from lf_logic.phonologic_fixers.base_fixer import BaseFixer
 
 
 class DageshKalFixer(BaseFixer):
+    ORDER = 50
     BEGED_KEFET = "בגדכפת"
 
     @staticmethod

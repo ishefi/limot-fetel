@@ -5,6 +5,7 @@ from lf_logic.phonologic_fixers.base_fixer import BaseFixer
 
 
 class HitpaelFixer(BaseFixer):
+    ORDER = 25
     TEMPLATE = "הִתְפַעֵּל"
     VOICE_ASSIM = {"ז": "ד"}
     EMPATHIC_ASSIM = {"צ": "ט"}

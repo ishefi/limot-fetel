@@ -5,6 +5,7 @@ from lf_logic.phonologic_fixers.base_fixer import BaseFixer
 
 
 class GroniyotFixer(BaseFixer):
+    ORDER = 50
     GRONIYOT = "אהחער"
     HATAF_PATAX = "ֲ"
 

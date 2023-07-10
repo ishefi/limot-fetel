@@ -17,9 +17,10 @@ class TestFixerCollector(LfTestCase):
         self._fixer_import = (
             "from lf_logic.phonologic_fixers.base_fixer import BaseFixer"
         )
-        self._mock_fixer_content = (
+        self._mock_fixer_template = (
             self._fixer_import + "\n"
             "class MockFixer(BaseFixer):\n"
+            "    ORDER = {order}\n"
             "    def fix(word): pass"
         )
 
@@ -27,7 +28,7 @@ class TestFixerCollector(LfTestCase):
         if filedir is None:
             filedir = self.fixers_path
         if content is None:
-            content = self._mock_fixer_content
+            content = self._mock_fixer_template.format(order=1)
         temp = self.mk_temp_file(filedir, suffix, content)
         temp_mod = fixer_collector.Path(temp.name)
         self.m_iterdir.return_value = [temp_mod]
@@ -89,11 +90,7 @@ class TestFixerCollector(LfTestCase):
 
     def test_collect_only_concrete(self):
         # arrange
-        content = (
-            self._fixer_import
-            + "\n"
-            + "class MockFixer(BaseFixer): pass"  # missing fix()
-        )
+        content = self._mock_fixer_template.format(order=1).replace(" fix(", " fux(")
         self.mk_temp_mocker(content=content)
 
         # act
@@ -138,3 +135,19 @@ class TestFixerCollector(LfTestCase):
 
         # assert
         self.assertEqual(fixers_before, fixers_after)
+
+    def test_collect_fixer_by_order(self):
+        # arrange
+        orders = [1, 42, 50]
+        mods = [
+            self.mk_temp_mocker(content=self._mock_fixer_template.format(order=order))
+            for order in orders
+        ]
+        random.shuffle(mods)
+        self.m_iterdir.return_value = mods
+
+        # act
+        fixers = fixer_collector.collect_fixers()
+
+        # assert
+        self.assertListEqual(orders, [fixer.ORDER for fixer in fixers])

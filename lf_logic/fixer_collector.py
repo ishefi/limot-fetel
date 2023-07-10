@@ -23,6 +23,7 @@ def collect_fixers() -> list[Fixer]:
     fixers: list[Fixer] = []
     for mod in Path.iterdir(absolute_fixer_dir):
         _fixers_from_file(fixers, py_module, mod)
+    fixers.sort(key=lambda fixer: fixer.ORDER)
     return fixers
 
 
